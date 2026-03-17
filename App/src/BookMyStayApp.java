@@ -1,51 +1,155 @@
 /**
  * ===============================================================
- * MAIN CLASS - UseCase1HotelBookingApp
+ * MAIN CLASS - UseCase2RoomInitialization
  * ===============================================================
  *
- * Use Case 1: Application Entry & Welcome Message
+ * Use Case 2: Basic Room Types & Static Availability
  *
  * Description:
- * This class represents the entry point of the
- * Book My Stay - Hotel Booking Management System.
+ * Initializes predefined room types and displays
+ * their details along with availability.
  *
- * At this stage, the application:
- * - Starts execution from the main() method
- * - Displays a welcome message to the user
- * - Confirms that the system has started successfully
- *
- * No business logic, data structures, or user input
- * is implemented in this use case.
- *
- * The goal is to establish a clear and predictable
- * application startup point.
- *
- * @author Developer
- * @version 1.0
+ * @version 2.1
  */
-
 public class BookMyStayApp {
 
     /**
      * Application entry point.
      *
-     * This method is the first method executed
-     * when the program is launched by the JVM.
-     *
-     * @param args Command-line arguments
+     * @param args command-line arguments
      */
     public static void main(String[] args) {
 
-        // Welcome message
-        System.out.println("=================================");
-        System.out.println("      Welcome to Book My Stay");
-        System.out.println("   Hotel Booking Management App");
-        System.out.println("           Version 1.0");
-        System.out.println("=================================");
+        System.out.println("Hotel Room Initialization\n");
 
-        // Confirmation message
-        System.out.println("System started successfully.");
-        System.out.println("Thank you for using our application.");
+        // Create room objects
+        Room singleRoom = new SingleRoom();
+        Room doubleRoom = new DoubleRoom();
+        Room suiteRoom = new SuiteRoom();
 
+        // Static availability
+        int singleAvailability = 5;
+        int doubleAvailability = 3;
+        int suiteAvailability = 2;
+
+        System.out.println("Single Room:");
+        singleRoom.displayRoomDetails();
+        System.out.println("Available: " + singleAvailability);
+        System.out.println();
+
+        System.out.println("Double Room:");
+        doubleRoom.displayRoomDetails();
+        System.out.println("Available: " + doubleAvailability);
+        System.out.println();
+
+        System.out.println("Suite Room:");
+        suiteRoom.displayRoomDetails();
+        System.out.println("Available: " + suiteAvailability);
+    }
+}
+
+
+/**
+ * ===============================================================
+ * ABSTRACT CLASS - Room
+ * ===============================================================
+ *
+ * Represents a generic hotel room.
+ *
+ * @version 2.1
+ */
+abstract class Room {
+
+    /** Number of beds available in the room. */
+    protected int numberOfBeds;
+
+    /** Total size of the room in square feet. */
+    protected int squareFeet;
+
+    /** Price charged per night for this room type. */
+    protected double pricePerNight;
+
+    /**
+     * Constructor used by child classes to
+     * initialize common room attributes.
+     *
+     * @param numberOfBeds number of beds in the room
+     * @param squareFeet total room size
+     * @param pricePerNight cost per night
+     */
+    public Room(int numberOfBeds, int squareFeet, double pricePerNight) {
+        this.numberOfBeds = numberOfBeds;
+        this.squareFeet = squareFeet;
+        this.pricePerNight = pricePerNight;
+    }
+
+    /** Displays room details. */
+    public void displayRoomDetails() {
+        System.out.println("Beds: " + numberOfBeds);
+        System.out.println("Size: " + squareFeet + " sqft");
+        System.out.println("Price per night: " + pricePerNight);
+    }
+}
+
+
+/**
+ * ===============================================================
+ * CLASS - SingleRoom
+ * ===============================================================
+ *
+ * Represents a single room in the hotel.
+ *
+ * @version 2.1
+ */
+class SingleRoom extends Room {
+
+    /**
+     * Initializes a SingleRoom with
+     * predefined attributes.
+     */
+    public SingleRoom() {
+        super(1, 250, 1500.0);
+    }
+}
+
+
+/**
+ * ===============================================================
+ * CLASS - DoubleRoom
+ * ===============================================================
+ *
+ * Represents a double room in the hotel.
+ *
+ * @version 2.1
+ */
+class DoubleRoom extends Room {
+
+    /**
+     * Initializes a DoubleRoom with
+     * predefined attributes.
+     */
+    public DoubleRoom() {
+        super(2, 400, 2500.0);
+    }
+}
+
+
+/**
+ * ===============================================================
+ * CLASS - SuiteRoom
+ * ===============================================================
+ *
+ * Represents a suite room in the hotel.
+ *
+ * @version 2.1
+ */
+class SuiteRoom extends Room {
+
+    /**
+     * Initializes a SuiteRoom with
+     * predefined attributes.
+     */
+    public SuiteRoom() {
+        super(3, 750, 5000.0);
     }
 }
