@@ -1,174 +1,101 @@
-import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * ===============================================================
- * MAIN CLASS - UseCase4RoomSearch
+ * MAIN CLASS - UseCase5BookingRequestQueue
  * ===============================================================
  *
- * Use Case 4: Room Search & Availability Check
+ * Use Case 5: Booking Request (First-Come-First-Served)
  *
  * Description:
- * Allows guests to view available rooms without
- * modifying system state.
+ * Stores booking requests in FIFO order using Queue.
  *
- * @version 4.1
+ * @version 5.0
  */
 public class BookMyStayApp {
 
     public static void main(String[] args) {
 
-        System.out.println("Room Search Results\n");
+        System.out.println("Booking Request Queue (FIFO)\n");
 
-        // Initialize inventory
-        RoomInventory inventory = new RoomInventory();
+        // Create booking queue
+        BookingQueue bookingQueue = new BookingQueue();
 
-        // Perform search (read-only)
-        SearchService searchService = new SearchService(inventory);
-        searchService.displayAvailableRooms();
+        // Add booking requests
+        bookingQueue.addRequest(new Reservation("Alice", "Single"));
+        bookingQueue.addRequest(new Reservation("Bob", "Double"));
+        bookingQueue.addRequest(new Reservation("Charlie", "Suite"));
+        bookingQueue.addRequest(new Reservation("David", "Single"));
+
+        // Display queue
+        bookingQueue.displayQueue();
     }
 }
 
 
 /**
  * ===============================================================
- * CLASS - SearchService
+ * CLASS - Reservation
  * ===============================================================
  *
- * Handles read-only search operations.
- *
- * @version 4.1
+ * Represents a booking request.
  */
-class SearchService {
+class Reservation {
 
-    private RoomInventory inventory;
+    private String guestName;
+    private String roomType;
 
-    public SearchService(RoomInventory inventory) {
-        this.inventory = inventory;
+    public Reservation(String guestName, String roomType) {
+        this.guestName = guestName;
+        this.roomType = roomType;
+    }
+
+    public String getGuestName() {
+        return guestName;
+    }
+
+    public String getRoomType() {
+        return roomType;
+    }
+
+    public void display() {
+        System.out.println("Guest: " + guestName + " | Room Type: " + roomType);
+    }
+}
+
+
+/**
+ * ===============================================================
+ * CLASS - BookingQueue
+ * ===============================================================
+ *
+ * Manages booking requests using FIFO Queue.
+ */
+class BookingQueue {
+
+    private Queue<Reservation> queue;
+
+    public BookingQueue() {
+        queue = new LinkedList<>();
     }
 
     /**
-     * Displays only available rooms (availability > 0)
+     * Add booking request to queue
      */
-    public void displayAvailableRooms() {
-
-        System.out.println("Available Rooms:\n");
-
-        // Room objects (domain model)
-        Room single = new SingleRoom();
-        Room doubleRoom = new DoubleRoom();
-        Room suite = new SuiteRoom();
-
-        displayIfAvailable("Single", single);
-        displayIfAvailable("Double", doubleRoom);
-        displayIfAvailable("Suite", suite);
+    public void addRequest(Reservation reservation) {
+        queue.add(reservation);
+        System.out.println("Request added for " + reservation.getGuestName());
     }
 
     /**
-     * Helper method to check availability and display
+     * Display all booking requests in order
      */
-    private void displayIfAvailable(String type, Room room) {
-        int available = inventory.getAvailability(type);
+    public void displayQueue() {
+        System.out.println("\nCurrent Booking Queue:\n");
 
-        if (available > 0) {
-            System.out.println(type + " Room:");
-            room.displayRoomDetails();
-            System.out.println("Available: " + available);
-            System.out.println();
+        for (Reservation r : queue) {
+            r.display();
         }
-    }
-}
-
-
-/**
- * ===============================================================
- * CLASS - RoomInventory
- * ===============================================================
- *
- * Centralized inventory using HashMap.
- *
- * @version 4.1
- */
-class RoomInventory {
-
-    private HashMap<String, Integer> inventory;
-
-    public RoomInventory() {
-        inventory = new HashMap<>();
-
-        inventory.put("Single", 5);
-        inventory.put("Double", 3);
-        inventory.put("Suite", 2);
-    }
-
-    /**
-     * Read-only access (NO modification)
-     */
-    public int getAvailability(String roomType) {
-        return inventory.getOrDefault(roomType, 0);
-    }
-}
-
-
-/**
- * ===============================================================
- * ABSTRACT CLASS - Room
- * ===============================================================
- *
- * Represents a generic hotel room.
- *
- * @version 4.1
- */
-abstract class Room {
-
-    protected int numberOfBeds;
-    protected int squareFeet;
-    protected double pricePerNight;
-
-    public Room(int numberOfBeds, int squareFeet, double pricePerNight) {
-        this.numberOfBeds = numberOfBeds;
-        this.squareFeet = squareFeet;
-        this.pricePerNight = pricePerNight;
-    }
-
-    public void displayRoomDetails() {
-        System.out.println("Beds: " + numberOfBeds);
-        System.out.println("Size: " + squareFeet + " sqft");
-        System.out.println("Price per night: " + pricePerNight);
-    }
-}
-
-
-/**
- * ===============================================================
- * CLASS - SingleRoom
- * ===============================================================
- */
-class SingleRoom extends Room {
-    public SingleRoom() {
-        super(1, 250, 1500.0);
-    }
-}
-
-
-/**
- * ===============================================================
- * CLASS - DoubleRoom
- * ===============================================================
- */
-class DoubleRoom extends Room {
-    public DoubleRoom() {
-        super(2, 400, 2500.0);
-    }
-}
-
-
-/**
- * ===============================================================
- * CLASS - SuiteRoom
- * ===============================================================
- */
-class SuiteRoom extends Room {
-    public SuiteRoom() {
-        super(3, 750, 5000.0);
     }
 }
